@@ -15,9 +15,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 import graphviz
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
 # Figures inline and set visualization style
 #%matplotlib inline
 #sns.set()
@@ -35,17 +32,27 @@ data = pd.get_dummies(data, columns=['Quota','Hafiz-e-Quran','Admission_Quota'],
 #print(y.values)
 data = data[['Quota_OPEN', 'Hafiz-e-Quran_Yes', 'NTS', 'BA-BSC']]
 #print(data.head())
-data_train = data
+data_train = data.iloc[:200]
+data_test = data.iloc[200:]
 X = data_train.values
 y = survived_train.values
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3)
-
-
 #print(y)
-clf = RandomForestClassifier(n_estimators=100)
+clf = tree.DecisionTreeClassifier()
 #print(X)
 clf.fit(X, y)
-y_pred=clf.predict(X_test)
-from sklearn import metrics
-print("Accuracy:",metrics.accuracy_score(y_test, y_pred))
+
+tree.DecisionTreeClassifier(class_weight=None, criterion='entropy', max_depth=3,
+            max_features=None, max_leaf_nodes=None,
+            min_impurity_decrease=0.0, min_impurity_split=None,
+            min_samples_leaf=1, min_samples_split=2,
+            min_weight_fraction_leaf=0.0, presort=False, random_state=None,
+            splitter='best')
+
+dot_data = tree.export_graphviz(clf, out_file=None, 
+                     feature_names=['Quota_OPEN', 'Hafiz-e-Quran_Yes', 'NTS', 'BA-BSC'],  
+                     class_names=['OPEN','Bahawalpur','Rejected'],  
+                     filled=True, rounded=True,  
+                     special_characters=True)  
+graph = graphviz.Source(dot_data)  
+graph.render("dtree") 
