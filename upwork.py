@@ -84,7 +84,6 @@ def get_centroids(matrix,S, K):
     seed(1)
     c = []
     a = []
-    dict2 = {'c0': 'female' }
     for k in range(K):
         a.append("c"+str(k))
     
@@ -92,29 +91,34 @@ def get_centroids(matrix,S, K):
     print(d)
     for k in range(K):
     	value = randint(0, 2)
-        #a.append("c"+str(k))
+        
     	c.append(matrix[value])
         
-        #d = {el:0 for el in a}
-        #print(d)
+    min_distance = 0
+    min_distance_index = 0
     for i in range(3):
         for j in range(2):
-            mlist=get_distance(matrix[i],c[j])
-            #cluster[c1].append(c[j])
-            print(matrix[i])
-            print(c[j])
+            distance=get_distance(matrix[i],c[j])
+            if(min_distance == 0):
+                min_distance = distance
+                min_distance_index = 0
+            if(min_distance > distance):
+                min_distance = distance
+                min_distance_index = j
+            print(str(i) + " " + str(j) + " "+str(distance))
             key = 'c'+str(j)
             if(checkKey(d, key)):
-                c4 = {key:[[1,3],[4,2]]}
-                #d.update("c0"=[[1,3],[4,2]])
+                c4 = {key:c[j]}
                 d.update(c4)
-            c2=[]
-            #c2 = clusters.get(ms)
-            c2.append([4,4])
-            #clusters.update(ms=c2)
-          #  myDict.update(c1=[3,4])
             print(d)
+        print(min_distance_index)
+        print(min_distance)
+        S.update({i:min_distance_index})
+        #S needs to be adjusted here
+        min_distance_index = 0
+        min_distance = 0
         print("done")
+        print(S)
     return 1
 #load_from_csv("Data.csv")
 x = [ -1, 1, 3, 2 ] 
@@ -133,4 +137,4 @@ for row in a:
 #for row in standardized_data_result:
     #print(' '.join([str(elem) for elem in row]))
 #print(get_median(a,1))
-get_centroids(a,[1,2,4],2)
+get_centroids(a,{},2)
